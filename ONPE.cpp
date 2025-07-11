@@ -63,55 +63,73 @@ int main(){
 	string sexo,partido,nombre,user,dom,lema;
 	Datos User[200], cont;
 	Correo Email;
-	cout<<"*****************************************************"<<endl;
-	cout<<"                          ONPE                      "<<endl;
-	cout<<"*****************************************************"<<endl;
-	cout<<"1. Inscripcion de candidatos"<<endl;
-	cout<<"2. Mostrar lista de candidatos"<<endl;
-	cout<<"3. Eliminar candidato"<<endl;
-	cout<<"4. Elecciones"<<endl;
-	cout<<"5. Resultados"<<endl;
-	cout<<"6. Salir"<<endl;
-	cout<<"Ingrese su opcion: "; cin>>Opcion;
+
 	
-	switch (Opcion){
-		case 1:
-			system ("cls");
-			cout<<"***********************************************************"<<endl;
-			cout<<"                     INSCRIPCION                           "<<endl;
-			cout<<"***********************************************************"<<endl;
-			cout<<"Ingrese los datos:  "<<endl;
-			cout<<"Nombre: "; cin>>nombre;
-			cout<<"Sexo (M|F): "; cin>>sexo;
-			cout<<"PartidoPo: ";cin>>partido;
-			cout<<"Edad: ";cin>>edad;
-			cout<<"Dni: "; cin>>dni;
-			cout<<"Lema: "; cin>>lema;
-			cout<<"Ingrese el correo electronico (Usuario@dominio): "<<endl;
-			cout<<"\tUsuario del correo: "; cin>>user;
-			cout<<"\tDominio del correo: "; cin>>dom;
+	do{
+		system("cls");
+		cout<<"*****************************************************"<<endl;
+		cout<<"                          ONPE                      "<<endl;
+		cout<<"*****************************************************"<<endl;
+		cout<<"1. Inscripcion de candidatos"<<endl;
+		cout<<"2. Modificar candidato"<<endl;
+		cout<<"3. Mostrar lista de candidato"<<endl;
+		cout<<"4. Elecciones"<<endl;
+		cout<<"5. Resultados"<<endl;
+		cout<<"6. Salir"<<endl;
+		cout<<"Ingrese su opcion: "; cin>>Opcion;
 
-			LeerCorreo(Email,user,dom);
-			LeerUser(cont,nombre,sexo,partido,edad,dni,Email,lema);
+		switch (Opcion){
+			case 1:
+				system ("cls");
+				cout<<"***********************************************************"<<endl;
+				cout<<"                     INSCRIPCION                           "<<endl;
+				cout<<"***********************************************************"<<endl;
+				cout<<"Ingrese los datos:  "<<endl;
+				cin.ignore();
+				cout<<"Nombre: "; getline(cin,nombre);
+				cout<<"Sexo (M|F): "; cin>>sexo;
+				cin.ignore();
+				cout<<"PartidoPo: ";getline(cin,partido);
+				cout<<"Edad: ";cin>>edad;
+				cout<<"Dni: "; cin>>dni;
+				cin.ignore();
+				cout<<"Lema: ";getline(cin,lema);
+				cout<<"Ingrese el correo electronico (Usuario@dominio): "<<endl;
+				cout<<"\tUsuario del correo: "; cin>>user;
+				cout<<"\tDominio del correo: "; cin>>dom;
 
-			User[n] = cont;
-			n++;
-			system ("pause");
-			break;
-			
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-			break;
-	}
+				LeerCorreo(Email,user,dom);
+				LeerUser(cont,nombre,sexo,partido,edad,dni,Email,lema);
+
+				User[n] = cont;
+				n++;
+				system ("pause");
+				
+				break;
+				
+			case 2:
+				system("cls");
+				
+				cout<<"        "<<"#CAN"<<" --> "<<"  Usuario  "<<" "<<"Partido Politico"<<endl;
+				for(int i=0;i<n;i++){
+					cout<<"Candidato "<<"#"<<i+1<<" --> "<<User[i].Nombre<<" "<<User[i].PartidoPo<<endl;
+				}
+				cout<<endl;
+				system("pause");
+				break;
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+				break;
+		}
+	}while(Opcion!=0);
 	return 0;
 }
 
 void LeerCorreo(Correo &a, string b,string c){
-	a.User=b;
-	a.Domain=c;
+	a.user=b;
+	a.domain=c;
 }
 void LeerUser(Datos &a,string b,string c,string d,int e,int f,Correo g,string h){
 	a.Nombre=b;
@@ -123,5 +141,4 @@ void LeerUser(Datos &a,string b,string c,string d,int e,int f,Correo g,string h)
 	a.Lema=h;
 	
 }
-	
 
