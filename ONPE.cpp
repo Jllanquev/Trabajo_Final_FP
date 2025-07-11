@@ -1,10 +1,48 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
-struct Correo{
-	string User;
-	string  Domain;
+enum EstadoCandidato { PENDIENTE, APTO, OBSERVADO };
+
+struct Correo {
+    string user;
+    string domain;
+};
+
+struct Candidato {
+    int numero;               
+    string nombreCompleto;
+    char sexo;
+    int edad;
+    int dni;
+    Correo email;
+    string partidoPolitico;
+    string observaciones;        
+    EstadoCandidato estado = PENDIENTE;
+    int votos = 0;             
+};
+
+struct MesaDeVotacion {
+    int numeroMesa;                 
+    string distrito;               
+     vector<int> dnisAsignados;
+    int votosEmitidos = 0;          
+    int capacidad = 500;             
+};
+struct Votante {
+    string dni;
+    string nombre;
+    int edad;
+    int numeroMesa;         
+    bool haVotado = false;
+};
+struct ResultadoFinal {
+    string nombreCandidato;
+    string partido;
+    int votos;
+    float porcentaje;
+    bool clasificaSegundaVuelta = false;
 };
 
 struct Datos{
