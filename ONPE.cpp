@@ -109,10 +109,12 @@ int main(){
 				
 			case 2:
 				system("cls");
-				cout<<endl<<endl;
-				cout<<"        "<<"#CAN"<<" --> "<<"  Usuario  "<<" "<<"Partido Politico"<<endl;
+				cout<<"****************************************************"<<endl;
+				cout<<"                 MENU DE MODIFICACIONES             "<<endl;
+				cout<<"****************************************************"<<endl<<endl;
+				cout<<"NUMERO DE ORDEN"<<"\t->\t"<<"CANDIDATOS"<<"\t-\t"<<"PARTIDO POLITICO"<<endl;
 				for(int i=0;i<n;i++){
-					cout<<"Candidato "<<"#"<<i+1<<" --> "<<User[i].Nombre<<" "<<User[i].PartidoPo<<endl;
+					cout<<"Candidato #"<<i+1<<"\t\t->\t"<<User[i].Nombre<<"\t-\t"<<User[i].PartidoPo<<endl;
 				}
 				cout<<endl;
 				cout<<"Inserte el numero de orden del candidato a modificar:   "; cin>>Opcion;
@@ -132,6 +134,7 @@ int main(){
 					cout<<"Lema: \t\t\t"<<User[cand].Lema<<endl;
 					cout<<"Correo electronico:\t"<<User[cand].Email.user<<"@"<<User[cand].Email.domain<<endl<<endl;
 					
+					cout<<"PARAMETROS A MODIFICAR:"<<endl;
 					cout<<"1. Nombre del candidato"<<endl;
 					cout<<"2. Sexo del candidato"<<endl;
 					cout<<"3. Partido politico"<<endl;
@@ -191,7 +194,23 @@ int main(){
 				} while (Opcion != 8);
 				break;
 			case 3:
+				system("cls");
+				cout<<"*****************************************************"<<endl;
+				cout<<"                   LISTA DE CANDIDATOS               "<<endl;
+				cout<<"*****************************************************"<<endl<<endl;
 				
+				for( int i = 0 ; i < n ; i++ ){
+					cout<<"\tCANDIDATO #"<<(i+1)<<":"<<endl;
+					cout<<"Nombre: \t\t"<<User[i].Nombre<<endl;
+					cout<<"Sexo: \t\t\t"<<User[i].Sexo<<endl;
+					cout<<"Partido politico: \t"<<User[i].PartidoPo<<endl;
+					cout<<"Edad: \t\t\t"<<User[i].Edad<<endl;
+					cout<<"DNI: \t\t\t"<<User[i].Dni<<endl;
+					cout<<"Lema: \t\t\t"<<User[i].Lema<<endl;
+					cout<<"Correo electronico:\t"<<User[i].Email.user<<"@"<<User[i].Email.domain<<endl<<endl;
+				}
+				system("pause");
+				break;
 			case 4:
 			case 5:
 			case 6:
