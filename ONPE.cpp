@@ -295,5 +295,3 @@ void ImprimeCandidato(Candidato &c){
     cout<<"Lema:             "<<c.Lema<<endl;
 }
 
-	
-
