@@ -59,7 +59,7 @@ void LeerCorreo(Correo &, string, string);
 void LeerUser(Datos &,string,string,string,int,int,Correo,string);
 
 int main(){
-	int Opcion,edad,dni,n=0;
+	int Opcion,edad,dni,n=0,cand;
 	string sexo,partido,nombre,user,dom,lema;
 	Datos User[200], cont;
 	Correo Email;
@@ -109,21 +109,95 @@ int main(){
 				
 			case 2:
 				system("cls");
-				
+				cout<<endl<<endl;
 				cout<<"        "<<"#CAN"<<" --> "<<"  Usuario  "<<" "<<"Partido Politico"<<endl;
 				for(int i=0;i<n;i++){
 					cout<<"Candidato "<<"#"<<i+1<<" --> "<<User[i].Nombre<<" "<<User[i].PartidoPo<<endl;
 				}
 				cout<<endl;
-				system("pause");
+				cout<<"Inserte el numero de orden del candidato a modificar:   "; cin>>Opcion;
+				cand = (Opcion-1);
+				//Casos en menu de opciones con do-while para poder volver al menu principal :D
+				do{
+					system("cls");
+					cout<<"****************************************************"<<endl;
+					cout<<"                 MENU DE MODIFICACIONES             "<<endl;
+					cout<<"****************************************************"<<endl<<endl;
+					cout<<"\tCandidato #"<<(cand+1)<<":"<<endl;
+					cout<<"Nombre: \t\t"<<User[cand].Nombre<<endl;
+					cout<<"Sexo: \t\t\t"<<User[cand].Sexo<<endl;
+					cout<<"Partido politico: \t"<<User[cand].PartidoPo<<endl;
+					cout<<"Edad: \t\t\t"<<User[cand].Edad<<endl;
+					cout<<"DNI: \t\t\t"<<User[cand].Dni<<endl;
+					cout<<"Lema: \t\t\t"<<User[cand].Lema<<endl;
+					cout<<"Correo electronico:\t"<<User[cand].Email.user<<"@"<<User[cand].Email.domain<<endl<<endl;
+					
+					cout<<"1. Nombre del candidato"<<endl;
+					cout<<"2. Sexo del candidato"<<endl;
+					cout<<"3. Partido politico"<<endl;
+					cout<<"4. Edad del candidato"<<endl;
+					cout<<"5. DNI del candidato"<<endl;
+					cout<<"6. Lema del candidato"<<endl;
+					cout<<"7. Email del candidato"<<endl;
+					cout<<"8. Volver al menu principal"<<endl<<endl;
+					cout<<"Ingrese su opcion: "; cin>>Opcion;
+					switch (Opcion){
+						case 1:
+							system("cls");
+							cout<<"Inserte el nombre modificado del candidato:"<<endl;
+							cin.ignore();
+							cout<<"Nombre: "; getline(cin,User[cand].Nombre);
+							break;							
+						case 2:
+							system("cls");
+							cout<<"Inserte el sexo modificado del candidato:"<<endl;
+							cout<<"Sexo (M|F): "; cin>>User[cand].Sexo;
+							break;
+						case 3:
+							system("cls");
+							cout<<"Inserte el Partido politico modificado del candidato:"<<endl;
+							cin.ignore();
+							cout<<"PartidoPo: ";getline(cin,User[cand].PartidoPo);
+							break;
+						case 4:
+							system("cls");
+							cout<<"Inserte la edad modificada del candidato:"<<endl;
+							cout<<"Edad: ";cin>>User[cand].Edad;
+							break;
+						case 5:
+							system("cls");
+							cout<<"Inserte el DNI modificado del candidato:"<<endl;
+							cout<<"DNI: "; cin>>User[cand].Dni;
+							break;
+						case 6:
+							system("cls");
+							cout<<"Inserte el lema modificado del candidato:"<<endl;
+							cin.ignore();
+							cout<<"Lema: ";getline(cin,User[cand].Lema);
+							break;
+						case 7:
+							system("cls");
+							cout<<"Ingrese el correo electronico modificado (Usuario@dominio): "<<endl;
+							cout<<"\tUsuario del correo: "; cin>>User[cand].Email.user;
+							cout<<"\tDominio del correo: "; cin>>User[cand].Email.domain;
+							break;
+						case 8:
+							break;
+						default:
+							cout<<"ERROR: Ocion fuera de los parametros, INTENTE OTRA VEZ !!!"<<endl;
+							system("pause");
+							break;
+					}
+				} while (Opcion != 8);
 				break;
 			case 3:
+				
 			case 4:
 			case 5:
 			case 6:
 				break;
 		}
-	}while(Opcion!=0);
+	}while(Opcion!=6);
 	return 0;
 }
 
