@@ -12,13 +12,13 @@ struct Correo {
 
 struct Candidato {
     int numero;               
-    string nomCompleto;
-    char sexo;
-    int edad;
-    string dni;
-    Correo email;
+    string Nombre;
+    char Sexo;
+    int Edad;
+    string Dni;
+    Correo Email;
     string PartidoPo;
-    string lema;
+    string Lema;
     string observaciones;        
     EstadoCandidato estado = PENDIENTE;
     int votos = 0;             
@@ -117,7 +117,7 @@ int main(){
 				cout<<"#CAN\tNombre Completo del Candidato\tPartido Politico\n";
                 cout<<"-----------------------------------------------------------------\n";
 				for(int i=0;i<n;i++){
-					cout<<i+1<<" \t"<<User[i].nomCompleto<<"\t"<<User[i].PartidoPo<<endl;
+					cout<<i+1<<" \t"<<User[i].Nombre<<"\t"<<User[i].PartidoPo<<endl;
 				}
                 cout<<endl;
 				cout<<"Inserte el numero de orden del candidato a modificar:   "; cin>>opcion;
@@ -129,13 +129,13 @@ int main(){
 					cout<<"                 MENU DE MODIFICACIONES             "<<endl;
 					cout<<"****************************************************"<<endl<<endl;
 					cout<<"\tCandidato #"<<(cand+1)<<endl;
-					cout<<"Nombre:           "<<User[cand].nomCompleto<<endl;
-					cout<<"Sexo:             "<<User[cand].sexo<<endl;
+					cout<<"Nombre:           "<<User[cand].Nombre<<endl;
+					cout<<"Sexo:             "<<User[cand].Sexo<<endl;
 					cout<<"Partido politico: "<<User[cand].PartidoPo<<endl;
-					cout<<"Edad:             "<<User[cand].edad<<endl;
-					cout<<"DNI:              "<<User[cand].dni<<endl;
-					cout<<"Lema:             "<<User[cand].lema<<endl;
-					cout<<"Correo electronico:\t"<<User[cand].email.user<<"@"<<User[cand].email.dom<<endl<<endl;
+					cout<<"Edad:             "<<User[cand].Edad<<endl;
+					cout<<"DNI:              "<<User[cand].Dni<<endl;
+					cout<<"Lema:             "<<User[cand].Lema<<endl;
+					cout<<"Correo electronico:\t"<<User[cand].Email.user<<"@"<<User[cand].Email.dom<<endl<<endl;
 					
 					cout<<"1. Nombre del candidato"<<endl;
 					cout<<"2. Sexo del candidato"<<endl;
@@ -151,12 +151,12 @@ int main(){
 							system("cls");
 							cout<<"Inserte el nombre modificado del candidato:"<<endl;
 							cin.ignore();
-							cout<<"Nombre: "; getline(cin,User[cand].nomCompleto);
+							cout<<"Nombre: "; getline(cin,User[cand].Nombre);
 							break;							
 						case 2:
 							system("cls");
 							cout<<"Inserte el sexo modificado del candidato:"<<endl;
-							cout<<"Sexo (M|F): "; cin>>User[cand].sexo;
+							cout<<"Sexo (M|F): "; cin>>User[cand].Sexo;
 							break;
 						case 3:
 							system("cls");
@@ -167,24 +167,24 @@ int main(){
 						case 4:
 							system("cls");
 							cout<<"Inserte la edad modificada del candidato:"<<endl;
-							cout<<"Edad: ";cin>>User[cand].edad;
+							cout<<"Edad: ";cin>>User[cand].Edad;
 							break;
 						case 5:
 							system("cls");
 							cout<<"Inserte el DNI modificado del candidato:"<<endl;
-							cout<<"DNI: "; cin>>User[cand].dni;
+							cout<<"DNI: "; cin>>User[cand].Dni;
 							break;
 						case 6:
 							system("cls");
 							cout<<"Inserte el lema modificado del candidato:"<<endl;
 							cin.ignore();
-							cout<<"Lema: ";getline(cin,User[cand].lema);
+							cout<<"Lema: ";getline(cin,User[cand].Lema);
 							break;
 						case 7:
 							system("cls");
 							cout<<"Ingrese el correo electronico modificado (Usuario@dominio): "<<endl;
-							cout<<"\tUsuario del correo: "; cin>>User[cand].email.user;
-							cout<<"\tDominio del correo: "; cin>>User[cand].email.dom;
+							cout<<"\tUsuario del correo: "; cin>>User[cand].Email.user;
+							cout<<"\tDominio del correo: "; cin>>User[cand].Email.dom;
 							break;
 						case 8:
 							break;
@@ -196,14 +196,29 @@ int main(){
 				} while (opcion != 8);
 				break;
         case 3:
+        		system("cls");
+				cout<<"*****************************************************"<<endl;
+				cout<<"                   LISTA DE CANDIDATOS               "<<endl;
+				cout<<"*****************************************************"<<endl<<endl;
+
+				for( int i = 0 ; i < n ; i++ ){
+					cout<<"\tCANDIDATO #"<<(i+1)<<":"<<endl;
+					cout<<"Nombre: \t\t"<<User[i].Nombre<<endl;
+					cout<<"Sexo: \t\t\t"<<User[i].Sexo<<endl;
+					cout<<"Partido politico: \t"<<User[i].PartidoPo<<endl;
+					cout<<"Edad: \t\t\t"<<User[i].Edad<<endl;
+					cout<<"DNI: \t\t\t"<<User[i].Dni<<endl;
+					cout<<"Lema: \t\t\t"<<User[i].Lema<<endl;
+					cout<<"Correo electronico:\t"<<User[i].Email.user<<"@"<<User[i].Email.dom<<endl<<endl;
+				}
+				system("pause");
             break;
         case 4:
-
             break;
         case 5:
             break;
         case 6:
-            int opc;
+            int opt;
             do{
                 system("cls");
                 cout<<"****************************************************"<<endl;
@@ -214,8 +229,8 @@ int main(){
                 cout<<"3. Iniciar eleccciones(Emitir votos) "<<endl;
                 cout<<"4. Ver resumen por mesa(total de votos)"<<endl;
                 cout<<"5. Regresar al menu principal"<<endl;
-                cout<<"Ingrese su opcion: ";cin>>opc;
-                switch(opc){
+                cout<<"Ingrese su opcion: ";cin>>opt;
+                switch(opt){
                     case 1:
                         system("cls");
                         cout<<"***********************************************************"<<endl;
@@ -240,7 +255,7 @@ int main(){
                         system("pause");
                         break;               
                 }
-            }while(opc!=5);
+            }while(opt!=5);
             break;
         case 7:
             break;
@@ -257,13 +272,13 @@ int main(){
     return 0;
 }
 void LeerCandidato(Candidato &c, string n, char s, int e,string d,string p, string l,  Correo em){
-    c.nomCompleto = n;
-    c.sexo  = s;
-    c.edad = e;
-    c.dni= d;
+    c.Nombre = n;
+    c.Sexo  = s;
+    c.Edad = e;
+    c.Dni= d;
     c.PartidoPo = p;
-    c.lema = l;
-    c.email = em;
+    c.Lema = l;
+    c.Email = em;
 }
 
 void LeerCorreo(Correo &e, string u, string d){
@@ -271,13 +286,13 @@ void LeerCorreo(Correo &e, string u, string d){
     e.dom = d;
 }
 void ImprimeCandidato(Candidato &c){
-    cout<<"Nombres:          "<<c.nomCompleto<<endl;
-    cout<<"DNI:              "<<c.dni<<endl;  
-    cout<<"Sexo:             "<<c.sexo<<endl;
-    cout<<"Edad:             "<<c.edad<<endl;
-    cout<<"Email:            "<<c.email.user<<"@"<<c.email.dom<<endl;
+    cout<<"Nombres:          "<<c.Nombre<<endl;
+    cout<<"DNI:              "<<c.Dni<<endl;  
+    cout<<"Sexo:             "<<c.Sexo<<endl;
+    cout<<"Edad:             "<<c.Edad<<endl;
+    cout<<"Email:            "<<c.Email.user<<"@"<<c.Email.dom<<endl;
     cout<<"Partido Politico: "<<c.PartidoPo<<endl;
-    cout<<"Lema:             "<<c.lema<<endl;
+    cout<<"Lema:             "<<c.Lema<<endl;
 }
 
 	
