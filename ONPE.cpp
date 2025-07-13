@@ -1,11 +1,11 @@
-#include<iostream>
-#include<string>
+#include<iostream>  
+#include<string>   //para usar getline
 #include<cstdio>
-#include<random>
-#include <unordered_set>
-#include<cstdlib>
-#include<ctime>
-#include <iomanip>
+#include<random>     //para votar datos aleatorios
+#include <unordered_set>  //para usar random
+#include<cstdlib>    //para usar random
+#include<ctime>     //para usar random
+#include <iomanip>  //para mejorar la anchura de cada tabla
 #include<vector>
 
 using namespace std;
@@ -66,16 +66,38 @@ string distritos[NUM_DIST] = {
     "Gregorio Albarracin","Inclan","La Yarada-Los Palos",
     "Pachia","Palca","Pocollay","Sama"
 };
+const int NUM__NOMBRE = 50;  //nunca cambiara
+string nombre[NUM__NOMBRE] = {
+    "Juan", "Maria", "Luis", "Ana", "Pedro", "Carmen", "Jose", "Lucia", "Carlos", "Rosa",
+    "Miguel", "Elena", "Jorge", "Sofia", "Ricardo", "Laura", "Daniel", "Patricia", "Alejandro", "Teresa",
+    "Diego", "Gabriela", "Manuel", "Valeria", "Kevin", "Tatiana", "Raul", "Camila", "Sebastian", "Monica",
+    "Bruno", "Noelia", "Axel", "Milagros", "Cristian", "Paola", "Renzo", "Estefany", "Bianca", "Oscar",
+    "Fernando", "Ximena", "Gustavo", "Pilar", "Alan", "Antonia", "Nicolas", "Diana", "Santiago", "Isabela"
+};
+const int NUM_APELLIDOS = 50; //nunca cambiara
+string apellido[NUM_APELLIDOS] = {
+     "Perez", "Lopez", "Garcia", "Torres", "Diaz", "Rojas", "Vargas", "Fernandez", "Aguilar", "Salas",
+    "Mendoza", "Castillo", "Herrera", "Flores", "Ramos", "Ruiz", "Soto", "Chavez", "Romero", "Navarro",
+    "Llanque", "Bravo", "Salazar", "Vega", "Medina", "Palomino", "Paredes", "Silva", "Palacios", "Cabrera",
+    "Rivera", "Calderon", "Mora", "Puma", "Delgado", "Acosta", "Lozano", "Valdivia", "Huaman", "Ortiz",
+    "Limachi", "Espinoza", "Meza", "Cornejo", "Velasquez", "Vilca", "Aliaga", "Zevallos", "Huanca", "Quispe"
+};
+
 void LeerCorreo(Correo &, string, string);  //Leera el correo
 void LeerCandidato(Candidato &,string,char,int,string,string,string,Correo);  //Leera los datos del candidato
 void ImprimeCandidato(Candidato &);
 void crearVotante(Votante &);
 int generarDNI();
+void buscarVotantePorDNI(int,Votante[], int,const vector<MesaDeVotacion>&);
 string generarDistrito();
+string generarNombre();
+string generarApellido();
+
 int main(){
     int opcion,cand,edad,n=0,max_votantes=1000,max_mesas=100000,cap;
 	string partido,nombre,user,dom,dni,lema,distrito;
     char sexo;
+    bool PadronVotantes = false,procesocerrado=false;
 	Candidato User[200], InfoCand;
 	Correo email;
     vector<MesaDeVotacion> mesas;
@@ -129,8 +151,8 @@ int main(){
 					cout<<"\033[31mInscripcion de candidato descartado. No se guardo\033[0m"<<endl;
 				}
                 system("pause");
-                system("cls");
 
+                system("cls");
                 break;
         case 2:
                 system("cls");
@@ -304,12 +326,12 @@ int main(){
                 cout<<"               PROCESO DE ELECCIONES                "<<endl;
                 cout<<"****************************************************"<<endl;
                 cout<<"1. Mostrar lista de candidatos(aptos)"<<endl;
-
                 cout<<"2. Asignacion de votantes"<<endl;
                 cout<<"3. Asignacion de mesas de votacion"<<endl;
-                cout<<"4. Iniciar eleccciones(Emitir votos) "<<endl;
-                cout<<"5. Ver resumen por mesa(total de votos)"<<endl;
-                cout<<"6. Regresar al menu principal"<<endl;
+                cout<<"4. Buscar votante por DNI"<<endl;
+                cout<<"5. Iniciar eleccciones(Emitir votos) "<<endl;
+                cout<<"6. Ver resumen por mesa(total de votos)"<<endl;
+                cout<<"7. Regresar al menu principal"<<endl;
                 cout<<"Ingrese su opcion: ";cin>>opt;
                 switch(opt){
                     case 1:
@@ -327,20 +349,29 @@ int main(){
                         cout<<"***********************************************************"<<endl;
                         cout<<"                  ASIGNACION DE VOTANTES                   "<<endl;
                         cout<<"***********************************************************"<<endl;
-                        cout<<"Total de votantes: "<<max_votantes;
-                        for(int i=0;i<max_votantes && nVotantes < MAX_VOTANTES;i++){
-                            crearVotante(votantes[nVotantes]);
-                            nVotantes++;
-                        }
+                        if (!PadronVotantes) {
+                                cout<<"Total de votantes que se crearan: "<< max_votantes <<endl;
+                                nVotantes = 0;
+                                dnisUsados.clear();
+                                for (int i = 0; i < max_votantes && nVotantes < MAX_VOTANTES; ++i) {
+                                    crearVotante(votantes[nVotantes]);
+                                    nVotantes++;
+                                }
+                                PadronVotantes = true;
+                                cout << "\n\033[32mPadron generado exitosamente.\033[0m\n";
+                            } else {
+                                cout << "\033[33mEl padron ya a sido generado.\033[0m\n";
+                            }
                         cout<<endl;
+                        system("pause");
                         system("cls");
                         cout<<"***********************************************************"<<endl;
                         cout<<"                     LISTA DE VOTANTES                     "<<endl;
                         cout<<"***********************************************************"<<endl; 
-                        cout<<"#\tDNI votante\tDistrito\n";
-                        cout<<"---------------------------------------------------------------"<<endl;
+                        cout<<left << setw(8)<<"#"<<left << setw(15)<<"DNI votante"<<left << setw(30)<<"Nombre Completo del votante\tDistrito\n";
+                        cout<<"------------------------------------------------------------------------------------------------------------"<<endl;
                         for(int i=0;i<nVotantes;i++){
-                            cout<<i+1<<" \t"<< votantes[i].dni << '\t' << votantes[i].distrito << '\n';
+                            cout<<left << setw(8)<<i+1<<left << setw(15)<< votantes[i].dni <<left << setw(30)<< votantes[i].nombre<<"\t"<<votantes[i].distrito << '\n';
                         }
                         cout<<"Presione ENTER para continuar..."; cin.ignore(); cin.get();
                         break;
@@ -403,11 +434,244 @@ int main(){
                     }
                     case 4:
                         system("cls");
+                        cout<<"***********************************************************"<<endl;
+                        cout<<"                    BUSCAR VOTANTE POR DNI                 "<<endl;
+                        cout<<"***********************************************************"<<endl;
+                        int dniBuscado;
+                        cout<<"Ingrese el DNI del votante: ";cin>>dniBuscado;
+                            buscarVotantePorDNI(dniBuscado, votantes, nVotantes, mesas);
+                        cout<<"\nPresione ENTER para continuar...";  cin.ignore(); cin.get();
                         break;
                     case 5:
-                        system("cls"); 
+                        int opc1;
+                        do {
+                            system("cls");
+                            cout<< "****************************************************" << endl;
+                            cout<< "        \033[34mPROCESO DE VOTACION\033[0m          " << endl;
+                            cout<< "****************************************************" << endl;
+                            cout<< "1. Emitir voto manual (votante)" << endl;
+                            cout<< "2. Ver avance de las votaciones "<<endl;
+                            cout<< "3. Votacion automatica (simular 100,000 votos)" << endl;
+                            cout<< "4. Culminar proceso de votacion" << endl;
+                            cout<< "0. Regresar al menu principal" << endl;
+                            cout<< "----------------------------------------------------" << endl;
+                            cout<< "Ingrese su opcion: ";
+                            cin>> opc1;
+
+                            switch (opc1) {
+                                case 1:{
+                                    system("cls");
+                                    if (procesocerrado) {
+                                        cout << ">> El proceso ya fue cerrado. No se pueden emitir mas votos.\n";
+                                        system("pause");
+                                        break;
+                                    }
+                                    // Inicio del flujo de voto
+                                    cout << "****************************************************" << endl;
+                                    cout << "            \033[34mEMITIR VOTO\033[0m              " << endl;
+                                    cout << "****************************************************" << endl;
+                                    cout << "Ingrese su DNI: ";
+                                    int dni;
+                                    cin >> dni;
+                                    // Buscar al votante
+                                    int idx = -1;
+                                    for (int i = 0; i < nVotantes; ++i) {
+                                        if (votantes[i].dni == dni) {
+                                            idx = i;
+                                            break;
+                                        }
+                                    }
+                                    if (idx == -1) {
+                                        cout << "DNI no encontrado en el padrón.\n";
+                                        system("pause");
+                                        break;
+                                    }
+                                    if (votantes[idx].haVotado) {
+                                        cout << "Usted ya emitio su voto.\n";
+                                        system("pause");
+                                        break;
+                                    }
+                                    cout << "****************************************************" << endl;
+                                    cout << "          \033[34mCEDULA DE SUFRAGIO\033[0m          " << endl;
+                                    cout << "****************************************************" << endl;
+                                    cout << "\tDatos Generales\n";
+                                    cout << "---------------------------------------------------\n";
+                                    cout << "Nombre:   " << votantes[idx].nombre << '\n';
+                                    cout << "Edad:     " << votantes[idx].edad << '\n';
+                                    cout << "Distrito: " << votantes[idx].distrito << "\n\n";
+
+                                    char conf;
+                                    cout << "Son correctos los datos? (S/N): ";
+                                    cin >> conf;
+                                    if (conf != 'S' && conf != 's') {
+                                        cout << "Identidad no confirmada.\n";
+                                        system("pause");
+                                        break;
+                                    }
+
+                                    cout << "\n\t  VOTAR\n";
+                                    cout << "-----------------------------------------------\n";
+                                    int opcionVoto = 0;
+                                    int numEnCedula = 0;
+                                    int IndiceCand[200];  // Indice del Candidato
+                                    for (int c = 0; c < n; ++c) {
+                                        if (User[c].estado == APTO) {
+                                            IndiceCand[++numEnCedula] = c;
+                                            cout << setw(3) << numEnCedula << ". " << User[c].Nombre
+                                                << "  (" << User[c].PartidoPo << ")\n";
+                                        }
+                                    }
+
+                                    if (numEnCedula == 0) {
+                                        cout << "\nNo hay candidatos aptos. Votacion cancelada.\n";
+                                        system("pause");
+                                        break;
+                                    }
+                                    // Voto
+                                    cout << "\nMarque su voto (numero de candidato): ";
+                                    cin >> opcionVoto;
+                                    if (opcionVoto < 1 || opcionVoto > numEnCedula) {
+                                        cout << "\nVoto invalido. Se contabilizara como nulo.\n";
+                                    } else {
+                                        int idxCand = IndiceCand[opcionVoto];
+                                        User[idxCand].votos++;
+                                        cout << "\n\033[32mVoto registrado correctamente.\033[0m\n";
+                                    }
+                                    votantes[idx].haVotado = true;
+                                    // Incrementar votos en la mesa asignada
+                                    for (size_t i = 0; i < mesas.size(); ++i) {
+                                        if (mesas[i].numMesa == votantes[idx].n_mesa) {
+                                            mesas[i].votosEmitidos++;
+                                            break;
+                                        }
+                                    }
+                                    system("pause");
+                                    break;
+                                }
+                                case 2:{
+                                        system("cls");
+                                        //Calcular total de votos emitidos (solo candidatos APTO)
+                                        int totalEmitidos = 0;
+                                        for (int c = 0; c < n; ++c)               // n = total de candidatos
+                                            if (User[c].estado == APTO)
+                                                totalEmitidos += User[c].votos;
+
+                                        cout << "****************************************************" << endl;
+                                        cout << "          \033[34mAVANCE DE LA VOTACION\033[0m      " << endl;
+                                        cout << "****************************************************" << endl;
+                                        cout << left<< setw(4)  << "#" << setw(25) << "Candidato"<< setw(12) << "Partido"<< setw(10) << "Votos"<< "%\n";
+                                        cout << string(65,'-') << '\n';
+                                        //Imprimir cada candidato apto con su porcentaje
+                                        int orden = 0;
+                                        for (int i = 0; i < n; ++i) {
+                                            if (User[i].estado != APTO) continue;
+
+                                            double pct = (totalEmitidos == 0)
+                                                        ? 0.0
+                                                        : 100.0 * User[i].votos / totalEmitidos;
+
+                                            cout << left<< setw(4)  << ++orden<< setw(25) << User[i].Nombre.substr(0,24)<< setw(12) 
+                                            << User[i].PartidoPo<< setw(10) << User[i].votos<< fixed << setprecision(1) << pct << "%\n";
+                                        }
+                                        //Línea final con el total de votos emitidos
+                                        cout << string(65,'-') << '\n';
+                                        cout << left << setw(41) << "TOTAL VOTOS EMITIDOS"
+                                            << totalEmitidos << '\n';
+                                        system("pause");
+                                        break;
+                                    }
+                                    break;
+                                case 3:{
+                                    system("cls");
+                                    if (procesocerrado) {
+                                        cout << ">> El proceso ya fue cerrado. No se pueden emitir mas votos.\n";
+                                        system("pause");
+                                        break;
+                                    }
+
+                                    // Lista de índices de candidatos aptos
+                                    vector<int> candidatosAptos;
+                                    for (int i = 0; i < n; ++i)
+                                        if (User[i].estado == APTO)
+                                            candidatosAptos.push_back(i);
+
+                                    if (candidatosAptos.empty()) {
+                                        cout << "No hay candidatos aptos para recibir votos.\n";
+                                        system("pause");
+                                        break;
+                                    }
+
+                                    // Contador de votos emitidos
+                                    int votosAuto = 0;
+
+                                    // Simulación
+                                    for (int i = 0; i < nVotantes && votosAuto < 100000; ++i) {
+                                        if (!votantes[i].haVotado) {
+                                            // Elegir un candidato apto al azar
+                                            int idxCandidato = candidatosAptos[rand() % candidatosAptos.size()];
+                                            User[idxCandidato].votos++;
+
+                                            // Marcar como que votó
+                                            votantes[i].haVotado = true;
+
+                                            // Registrar voto en su mesa
+                                            for (int j = 0; j < mesas.size(); ++j) {
+                                                if (mesas[j].numMesa == votantes[i].n_mesa) {
+                                                    mesas[j].votosEmitidos++;
+                                                    break;
+                                                }
+                                            }
+
+                                            votosAuto++;
+                                        }
+                                    }
+
+                                    cout << "\n\033[32m>> Se emitieron " << votosAuto << " votos automaticamente.\033[0m\n";
+                                    system("pause");
+                                    break;
+                                }   
+                                case 4:{
+                                    system("cls");
+                                    if (procesocerrado) {
+                                        cout << "\033[33m>> El proceso de votacion ya esta cerrado.\033[0m\n";
+                                        system("pause");
+                                        break;
+                                    }
+
+                                    cout << "****************************************************\n";
+                                    cout << "        \033[34mCULMINAR PROCESO DE VOTACION\033[0m       \n";
+                                    cout << "****************************************************\n";
+                                    cout << "Desea finalizar las elecciones?\n";
+                                    cout << "[S]SI  /   [N]No : ";
+                                    char resp;
+                                    cin >> resp;
+
+                                    if (resp == 'S' || resp == 's') {
+                                        procesocerrado = true;
+                                        cout << "\n\033[32m>> Proceso de votacion cerrado exitosamente.\033[0m\n";
+                                        cout << "   Ya no se podran emitir mas votos.\n";
+                                    } else {
+                                        cout << "\nOperacion cancelada. El proceso sigue abierto.\n";
+                                    }
+
+                                    system("pause");
+                                    break;
+                                }
+                                case 0:
+                                    cout << "\n\033[33mRegresando al menu principal...\033[0m\n";
+                                    system("pause");
+                                    break;
+
+                                default:
+                                    cout << "\033[31mOpcion invalida. Intente de nuevo.\033[0m\n";
+                                    system("pause");
+                                    break;
+                            }
+                        } while (opc1 != 0);
                         break;
                     case 6:
+                        break;
+                    case 7:
                         cout << "Regresando al menu principal...\n";
                         break;
                     default:
@@ -415,7 +679,7 @@ int main(){
                         system("pause");
                         break;               
                 }
-            }while(opt!=5);
+            }while(opt!=7);
             break;
         case 7:
             break;
@@ -458,6 +722,7 @@ void ImprimeCandidato(Candidato &c){
 void crearVotante(Votante &v) {
     v.dni       = generarDNI();
     v.distrito  = generarDistrito();
+    v.nombre    = generarNombre() + " " + generarApellido() + " " + generarApellido();
     v.n_mesa    = -1;
     v.haVotado  = false;
 }
@@ -467,12 +732,50 @@ int generarDNI(){
      uniform_int_distribution<int> dist(40'000'000, 70'000'000);
      int d;
     do {
-        d = dist(rng);                       // Genera un nÃºmero en el rango
+        d = dist(rng);                       // Genera un numero en el rango
     } while ( dnisUsados.count(d) );         // Repite si ya fue usado
     dnisUsados.insert(d);                    // Marca el DNI como usado
-    return d;                                // Devuelve el DNI Ãºnico
+    return d;                                // Devuelve el DNI Unico
 }
 string generarDistrito(){
     int idx = rand() % NUM_DIST;
     return distritos[idx];
 }
+string generarNombre(){
+    int idxNombre = rand() % NUM__NOMBRE;
+    return nombre[idxNombre];
+}
+string generarApellido(){
+    int idxApellido = rand() % NUM_APELLIDOS;
+    return apellido[idxApellido];
+}
+void buscarVotantePorDNI(int dniBuscado,Votante votantes[], int nVotantes,const vector<MesaDeVotacion>& mesas){
+    bool encontrado = false; 
+    for(int i=0;i<nVotantes;i++){
+        if(votantes[i].dni==dniBuscado){
+            encontrado = true;
+            cout << "\n\033[36mVOTANTE ENCONTRADO\033[0m\n";
+            cout << "DNI:        " << votantes[i].dni      << '\n';
+            cout << "Nombre:     " << votantes[i].nombre   << '\n';
+            cout << "Distrito:   " << votantes[i].distrito << '\n';
+            cout << "Ha votado:  " << (votantes[i].haVotado ? "Sí" : "No") << '\n';
+            if (votantes[i].n_mesa == -1) {
+            cout << "\n\033[31mAún no tiene mesa asignada\033[0m" << endl;
+            }
+            else {
+                for (size_t j = 0; j < mesas.size(); ++j) {
+                    if (mesas[j].numMesa == votantes[i].n_mesa) {
+                        cout << "\n\033[36mMESA DE VOTACION\033[0m\n";
+                        cout << "N Mesa:   " << mesas[j].numMesa       << endl;
+                        cout << "Distrito:  " << mesas[j].distrito      << endl;
+                        break;  
+                    }
+                }
+            }
+            break;  
+        }
+    }
+    if(!encontrado)
+        cout<<"\n\t\033[31mVOTANTE NO ENCONTRADO\033[0m\n";
+    return;
+};
