@@ -104,9 +104,8 @@ int main(){
             cout<<"Nombres completos: "; getline(cin,nombre);
 			cout<<"Sexo (M|F): "; cin>>sexo;
 			cout<<"Edad: ";cin>>edad;
-            cin.ignore();
-			cout<<"Dni: "; cin>>dni;
-            cin.ignore();
+			cin.ignore();
+			cout<<"Dni: "; getline(cin,dni);
             cout<<"Partido Politico: ";getline(cin,partido);
 			cout<<"Lema: "; getline(cin,lema);
 			cout<<"Ingrese el correo electronico (Usuario@dominio): "<<endl;
@@ -124,12 +123,14 @@ int main(){
 					User[n] = InfoCand;
              	    n++;
              	    cout << "\033[32mLa inscripcion ha sido exitosa\033[0m" << endl;
-             	    cout<<endl;
+            	    cout<<endl;
 				}
 				else{
 					cout<<"\033[31mInscripcion de candidato descartado. No se guardo\033[0m"<<endl;
 				}
                 system("pause");
+                system("cls");
+
                 break;
         case 2:
                 system("cls");
@@ -235,62 +236,63 @@ int main(){
 					cout<<"Correo electronico:\t"<<User[i].Email.user<<"@"<<User[i].Email.dom<<endl<<endl;
 				}
 				system("pause");
+				system("cls");
             break;
         case 4:
-            system("cls");
-                //se va mostrar en la tabla:
-                cout<<"==================REVISION GENERAL DE CANDIDATOS===================\n\n"<<endl;
-                cout << "---------------------------------------------------------------------------------------------\n";
-                cout << "| # |      NOMBRE       |   DNI    | EDAD |         CORREO         |   ESTADO   |\n";
-                cout << "---------------------------------------------------------------------------------------------\n";  
-                
-                for(int i=0;i<n;i++){
-                    Candidato &c=User[i];
-                    //se va a evaluar el estado:
-                    if(c.Nombre.empty()||c.PartidoPo.empty()||c.Dni.empty()||c.Lema.empty()){   // empty() verifica si el candidato se salto algo del registro 
-                        c.estado= PENDIENTE;
-                    }
-                    else if(c.Edad<35){
-                        c.estado= OBSERVADO;
-                    }
-                    else{
-                        c.estado= APTO;
-                    }     		
-                
-                    //color y estado del texto:
-                    string color,estadotexto;
-                    switch(c.estado){
-                        case APTO: 
-                            color = "\033[32m"; estadotexto = "APTO     "; break;
-                        case OBSERVADO: 
-                            color = "\033[33m"; estadotexto = "OBSERVADO"; break;
-                        case PENDIENTE: 
-                            color = "\033[31m"; estadotexto = "PENDIENTE"; break;	
-                    }
-                    
-                    printf("| %2d | %-17s | %-8s | %4d | %-23s | %s%-10s\033[0m |\n",
-                            i + 1,
-                            c.Nombre.c_str(),
-                            c.Dni.c_str(),
-                            c.Edad,
-                            (c.Email.user + "@" + c.Email.dom).c_str(),
-                            color.c_str(),
-                            estadotexto.c_str()
-                        );	
-                        
-                    //Si el usuario es Observado se le enviara un correo
-                    if (c.estado == OBSERVADO) {
-                        cout << "\033[33m>> Correo enviado a " << c.Email.user << "@" << c.Email.dom << ": ";
-                        cout << "Estimado(a) " << c.Nombre << ", su inscripci�n ha sido OBSERVADA.\n";
-                        cout << "   Por favor revise sus datos para continuar en el proceso.\033[0m\n";
-                    }
-                
-                    
-                }
-                cout << "---------------------------------------------------------------------------------------------\n";
+        	system("cls");
+        	//se va mostrar en la tabla:
+         	cout<<"==================REVISION GENERAL DE CANDIDATOS===================\n\n"<<endl;
+        	cout << "---------------------------------------------------------------------------------------------\n";
+ 		   	cout << "| # |      NOMBRE       |   DNI    | EDAD |         CORREO         |   ESTADO   |\n";
+    		cout << "---------------------------------------------------------------------------------------------\n";  
+    		
+        	for(int i=0;i<n;i++){
+        		Candidato &c=User[i];
+        		//se va a evaluar el estado:
+        		if(c.Nombre.empty()||c.PartidoPo.empty()||c.Dni.empty()||c.Lema.empty()){   // empty() verifica si el candidato se salto algo del registro 
+        			c.estado= PENDIENTE;
+				}
+				else if(c.Edad<35){
+					c.estado= OBSERVADO;
+				}
+				else{
+					c.estado= APTO;
+				}     		
+        	
+				//color y estado del texto:
+				string color,estadotexto;
+				switch(c.estado){
+					case APTO: 
+						color = "\033[32m"; estadotexto = "APTO     "; break;
+		        	case OBSERVADO: 
+						color = "\033[33m"; estadotexto = "OBSERVADO"; break;
+		            case PENDIENTE: 
+						color = "\033[31m"; estadotexto = "PENDIENTE"; break;	
+				}
+				
+			    printf("| %2d | %-17s | %-8s | %4d | %-23s | %s%-10s\033[0m |\n",
+			            i + 1,
+			            c.Nombre.c_str(),
+			            c.Dni.c_str(),
+			            c.Edad,
+			            (c.Email.user + "@" + c.Email.dom).c_str(),
+			            color.c_str(),
+			            estadotexto.c_str()
+			        );	
+			        
+			    //Si el usuario es Observado se le enviara un correo
+		        if (c.estado == OBSERVADO) {
+	            	cout << "\033[33m>> Correo enviado a " << c.Email.user << "@" << c.Email.dom << ": ";
+	            	cout << "Estimado(a) " << c.Nombre << ", su inscripción ha sido OBSERVADA.\n";
+	            	cout << "   Por favor revise sus datos para continuar en el proceso.\033[0m\n";
+      			}
+        	
+        		
+			}
+			cout << "---------------------------------------------------------------------------------------------\n";
 
-                system("pause");
-                system("cls");
+        	system("pause");
+        	system("cls");
             break;
         case 5:
             break;
@@ -302,6 +304,7 @@ int main(){
                 cout<<"               PROCESO DE ELECCIONES                "<<endl;
                 cout<<"****************************************************"<<endl;
                 cout<<"1. Mostrar lista de candidatos(aptos)"<<endl;
+
                 cout<<"2. Asignacion de votantes"<<endl;
                 cout<<"3. Asignacion de mesas de votacion"<<endl;
                 cout<<"4. Iniciar eleccciones(Emitir votos) "<<endl;
@@ -317,6 +320,7 @@ int main(){
                         cout<<endl<<endl;
                         cout<<"#\tNombre Completo del Candidato\tPartido Politico\n";
                         cout<<"-----------------------------------------------------------------\n";
+
                         break;
                     case 2:
                         system("cls");
@@ -425,7 +429,6 @@ int main(){
     }
     system("pause");
     }while(opcion!=0);
-
     return 0;
 }
 void LeerCandidato(Candidato &c, string n, char s, int e,string d,string p, string l,  Correo em){
@@ -441,6 +444,7 @@ void LeerCandidato(Candidato &c, string n, char s, int e,string d,string p, stri
 void LeerCorreo(Correo &e, string u, string d){
     e.user = u;
     e.dom = d;
+
 }
 void ImprimeCandidato(Candidato &c){
     cout<<"Nombres:          "<<c.Nombre<<endl;
@@ -463,10 +467,10 @@ int generarDNI(){
      uniform_int_distribution<int> dist(40'000'000, 70'000'000);
      int d;
     do {
-        d = dist(rng);                       // Genera un número en el rango
+        d = dist(rng);                       // Genera un nÃºmero en el rango
     } while ( dnisUsados.count(d) );         // Repite si ya fue usado
     dnisUsados.insert(d);                    // Marca el DNI como usado
-    return d;                                // Devuelve el DNI único
+    return d;                                // Devuelve el DNI Ãºnico
 }
 string generarDistrito(){
     int idx = rand() % NUM_DIST;
