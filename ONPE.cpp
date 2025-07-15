@@ -45,6 +45,7 @@ struct Votante {
     int edad;
     int n_mesa;         
     bool haVotado = false;
+    int cand_voto;
 };
 struct ResultadoFinal {
     string nombreCandidato;
@@ -94,7 +95,8 @@ string generarNombre();
 string generarApellido();
 
 int main(){
-    int opcion,cand,edad,n=0,max_votantes=1000,max_mesas=100000,cap;
+    int opcion,cand,edad,n=0,max_votantes=1000,max_mesas=100000,cap,r[n];
+    
 	string partido,nombre,user,dom,dni,lema,distrito,OPC;
     char sexo;
     bool PadronVotantes = false,procesocerrado=false;
@@ -102,7 +104,8 @@ int main(){
 	Correo email;
     vector<MesaDeVotacion> mesas;
     do{
-     cout<<"*****************************************************"<<endl;
+    system("cls");
+    cout<<"*****************************************************"<<endl;
 	cout<<"                  \033[31mONPE\033[0m                     "<<endl;
 	cout<<"*****************************************************"<<endl;
 	cout<<"1. Inscripcion de candidatos"<<endl;
@@ -116,7 +119,7 @@ int main(){
 	cout<<"Ingrese su opcion: "; cin>>opcion;
     switch (opcion){
 		case 1:
-			system ("cls");
+			system("cls");
 			cout<<"***********************************************************"<<endl;
 			cout<<"                     INSCRIPCION                           "<<endl;
 			cout<<"***********************************************************"<<endl;
@@ -157,14 +160,10 @@ int main(){
              	    n++;
              	    cout << "\033[32mLa inscripcion ha sido exitosa\033[0m" << endl;
             	    cout<<endl;
-
 				}
 				else{
 					cout<<"\033[31mInscripcion de candidato descartado. No se guardo\033[0m"<<endl;
 				}
-                system("pause");
-
-                system("cls");
                 break;
         case 2:
                 system("cls");
@@ -252,25 +251,33 @@ int main(){
 							break;
 					}
 				} while (opcion != 8);
+        		//se va a evaluar el estado:
+        		if(User[cand].Nombre.empty()||User[cand].PartidoPo.empty()||User[cand].Dni.empty()||User[cand].Lema.empty()){   // empty() verifica si el candidato se salto algo del registro 
+        			User[cand].estado= PENDIENTE;
+				}
+				else if(User[cand].Edad<35){
+					User[cand].estado= OBSERVADO;
+				}
+				else{
+					User[cand].estado= APTO;
+				} 
 				break;
         case 3:
-        		system("cls");
-				cout<<"*****************************************************"<<endl;
-				cout<<"                   LISTA DE CANDIDATOS               "<<endl;
-				cout<<"*****************************************************"<<endl<<endl;
+        	system("cls");
+			cout<<"*****************************************************"<<endl;
+			cout<<"                   LISTA DE CANDIDATOS               "<<endl;
+			cout<<"*****************************************************"<<endl<<endl;
 
-				for( int i = 0 ; i < n ; i++ ){
-					cout<<"\tCANDIDATO #"<<(i+1)<<":"<<endl;
-					cout<<"Nombre: \t\t"<<User[i].Nombre<<endl;
-					cout<<"Sexo: \t\t\t"<<User[i].Sexo<<endl;
-					cout<<"Partido politico: \t"<<User[i].PartidoPo<<endl;
-					cout<<"Edad: \t\t\t"<<User[i].Edad<<endl;
-					cout<<"DNI: \t\t\t"<<User[i].Dni<<endl;
-					cout<<"Lema: \t\t\t"<<User[i].Lema<<endl;
-					cout<<"Correo electronico:\t"<<User[i].Email.user<<"@"<<User[i].Email.dom<<endl<<endl;
-				}
-				system("pause");
-				system("cls");
+			for( int i = 0 ; i < n ; i++ ){
+				cout<<"\tCANDIDATO #"<<(i+1)<<":"<<endl;
+				cout<<"Nombre: \t\t"<<User[i].Nombre<<endl;
+				cout<<"Sexo: \t\t\t"<<User[i].Sexo<<endl;
+				cout<<"Partido politico: \t"<<User[i].PartidoPo<<endl;
+				cout<<"Edad: \t\t\t"<<User[i].Edad<<endl;
+				cout<<"DNI: \t\t\t"<<User[i].Dni<<endl;
+				cout<<"Lema: \t\t\t"<<User[i].Lema<<endl;
+				cout<<"Correo electronico:\t"<<User[i].Email.user<<"@"<<User[i].Email.dom<<endl<<endl;
+			}
             break;
         case 4:
         	system("cls");
@@ -314,8 +321,6 @@ int main(){
 			}
 			cout << "---------------------------------------------------------------------------------------------\n";
 
-        	system("pause");
-        	system("cls");
             break;
         case 5:
             system("cls");
@@ -344,8 +349,6 @@ int main(){
             else {
 				cout << "Candidato no existente.\n";
 			}
-            system("pause");
-            system("cls");
             break;
         case 6:
             int opt;
@@ -569,6 +572,7 @@ int main(){
                                     } else {
                                         int idxCand = IndiceCand[opcionVoto];
                                         User[idxCand].votos++;
+                                        votantes[idx].cand_voto = idxCand;
                                         cout << "\n\033[32mVoto registrado correctamente.\033[0m\n";
                                     }
                                     votantes[idx].haVotado = true;
@@ -643,6 +647,7 @@ int main(){
                                         if (!votantes[i].haVotado) {
                                             // Elegir un candidato apto al azar
                                             int idxCandidato = candidatosAptos[rand() % candidatosAptos.size()];
+                                            votantes[idxCandidato].cand_voto;
                                             User[idxCandidato].votos++;
 
                                             // Marcar como que vot�
@@ -702,14 +707,23 @@ int main(){
                             }
                         } while (opc1 != 0);
                         break;
-                    case 6:
-                        for (int j = 0 ; j < n ; j++){
-                            for (size_t i = 0; i < mesas.size(); ++i) {
-                                cout << "#" << User[j].numero << setw(28) << "\t-\t" <<User[j].votos << ":"<<endl;
-                                cout << left << setw(8) << mesas[i].numMesa<< setw(28) << mesas[i].distrito  << setw(10) 
-                                << mesas[i].capacidad << mesas[i].votosEmitidos << '\n';
-                            }
+                    case 6:                        
+                        system("cls");
+                        for (int i = 0; i < NUM_DIST; i++) {
+                            cout<<"*************  Distrito de "<<distritos[i]<<":  ****************"<<endl;
+                            for (int j = 0; j < n; j++){
+                                int vot_distr = 0;
+                                cout<<User[j].Nombre<<"\t -- \t"<<User[j].PartidoPo<<":"<<endl;
+                                for (int k = 0; k < 1000; k++){
+                                    if (votantes[k].cand_voto == j){
+                                        vot_distr++;
+                                    }
+                                }
+                                cout<<"\tVotos totales:\t"<<vot_distr<<endl;
+                            }      
+                            cout<<endl<<endl;                          
                         }
+                        system("pause");
                         break;
                     case 7:
                         cout << "Regresando al menu principal...\n";
@@ -722,6 +736,29 @@ int main(){
             }while(opt!=7);
             break;
         case 7:
+            system("cls");
+            cout<<"******************************************"<<endl;
+            cout<<"                RESULTADOS                "<<endl;
+            cout<<"******************************************"<<endl<<endl;
+            for (int i = 0; i < n; i++){
+                r[i]=User[i].votos;
+            }
+            for (int i = 0; i < n ; i++){
+                for (int j = 0; j < n - i -1; j++){
+                    if(r[j] < r[j+1]){
+                        int temp = r[j];
+                        r[j] = r[j+1];
+                        r[j+1] = temp;
+                    }
+                }
+            }
+            for (int i = 0; i < n; i++){
+                for (int j = 0; j < n; j++){
+                    if (r[i] == User[j].votos){
+                        cout<<i+1<<".-\t"<<User[j].Nombre<<"\t-\t"<<User[j].PartidoPo<<"\t-\t"<<User[j].Lema<<endl;
+                    }
+                }
+            }
             break;
         case 0:
             break;
@@ -729,7 +766,6 @@ int main(){
             cout<<"Opcion no valida!"<<endl;
             system("pause");
             break;
-
     }
     system("pause");
     }while(opcion!=0);
