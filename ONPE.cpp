@@ -143,6 +143,17 @@ int main(){
 				cout<<"Esta informacion es correcta? (S/N): "; cin>>opc;
 				if(opc=='S'|| opc=='s'){
 					User[n] = InfoCand;
+            		Candidato &c=User[n];
+        		    //se va a evaluar el estado:
+        		    if(c.Nombre.empty()||c.PartidoPo.empty()||c.Dni.empty()||c.Lema.empty()){   // empty() verifica si el candidato se salto algo del registro 
+        		    	c.estado= PENDIENTE;
+				    }
+				    else if(c.Edad<35){
+				    	c.estado= OBSERVADO;
+				    }
+				    else{
+				    	c.estado= APTO;
+				    } 
              	    n++;
              	    cout << "\033[32mLa inscripcion ha sido exitosa\033[0m" << endl;
             	    cout<<endl;
@@ -270,17 +281,6 @@ int main(){
     		
         	for(int i=0;i<n;i++){
         		Candidato &c=User[i];
-        		//se va a evaluar el estado:
-        		if(c.Nombre.empty()||c.PartidoPo.empty()||c.Dni.empty()||c.Lema.empty()){   // empty() verifica si el candidato se salto algo del registro 
-        			c.estado= PENDIENTE;
-				}
-				else if(c.Edad<35){
-					c.estado= OBSERVADO;
-				}
-				else{
-					c.estado= APTO;
-				}     		
-        	
 				//color y estado del texto:
 				string color,estadotexto;
 				switch(c.estado){
@@ -305,7 +305,7 @@ int main(){
 			    //Si el usuario es Observado se le enviara un correo
 		        if (c.estado == OBSERVADO) {
 	            	cout << "\033[33m>> Correo enviado a " << c.Email.user << "@" << c.Email.dom << ": ";
-	            	cout << "Estimado(a) " << c.Nombre << ", su inscripción ha sido OBSERVADA.\n";
+	            	cout << "Estimado(a) " << c.Nombre << ", su inscripcion ha sido OBSERVADA.\n";
 	            	cout << "   Por favor revise sus datos para continuar en el proceso.\033[0m\n";
       			}
         	
@@ -327,7 +327,7 @@ int main(){
 			cin >> mod;
 			mod--;
 			if(mod >= 0 && mod < n){
-                cout<<"¿Estas seguro de eliminar este candidato?"<<" (Si|No)  :";
+                cout<<"?Estas seguro de eliminar este candidato?"<<" (Si|No)  :";
                 cin>>OPC;
                     if(OPC=="Si"||OPC=="si"||OPC=="SI"||OPC=="sI"){   
                         for(int i = mod; i < n - 1; i++){
@@ -370,7 +370,12 @@ int main(){
                         cout<<endl<<endl;
                         cout<<"#\tNombre Completo del Candidato\tPartido Politico\n";
                         cout<<"-----------------------------------------------------------------\n";
-
+                        for (int i = 0 ; i < n ; i++ ){
+                            if (User[i].estado == APTO){
+                                cout<<"#"<<i+1<<"\t"<<User[i].Nombre<<"\t\t"<<User[i].PartidoPo<<"\t-\t"<<User[i].Lema<<endl;
+                            }
+                        }
+                        system("pause");
                         break;
                     case 2:
                         system("cls");
@@ -510,7 +515,7 @@ int main(){
                                         }
                                     }
                                     if (idx == -1) {
-                                        cout << "DNI no encontrado en el padrón.\n";
+                                        cout << "DNI no encontrado en el padr�n.\n";
                                         system("pause");
                                         break;
                                     }
@@ -601,7 +606,7 @@ int main(){
                                             cout << left<< setw(4)  << ++orden<< setw(25) << User[i].Nombre.substr(0,24)<< setw(12) 
                                             << User[i].PartidoPo<< setw(10) << User[i].votos<< fixed << setprecision(1) << pct << "%\n";
                                         }
-                                        //Línea final con el total de votos emitidos
+                                        //Linea final con el total de votos emitidos
                                         cout << string(65,'-') << '\n';
                                         cout << left << setw(41) << "TOTAL VOTOS EMITIDOS"
                                             << totalEmitidos << '\n';
@@ -616,8 +621,7 @@ int main(){
                                         system("pause");
                                         break;
                                     }
-
-                                    // Lista de índices de candidatos aptos
+                                    // Lista de �ndices de candidatos aptos
                                     vector<int> candidatosAptos;
                                     for (int i = 0; i < n; ++i)
                                         if (User[i].estado == APTO)
@@ -632,16 +636,15 @@ int main(){
                                     // Contador de votos emitidos
                                     int votosAuto = 0;
 
-                                    // Simulación
+                                    // Simulacion
                                     for (int i = 0; i < nVotantes && votosAuto < 100000; ++i) {
                                         if (!votantes[i].haVotado) {
                                             // Elegir un candidato apto al azar
                                             int idxCandidato = candidatosAptos[rand() % candidatosAptos.size()];
                                             User[idxCandidato].votos++;
 
-                                            // Marcar como que votó
+                                            // Marcar como que voto
                                             votantes[i].haVotado = true;
-
                                             // Registrar voto en su mesa
                                             for (int j = 0; j < mesas.size(); ++j) {
                                                 if (mesas[j].numMesa == votantes[i].n_mesa) {
@@ -698,6 +701,13 @@ int main(){
                         } while (opc1 != 0);
                         break;
                     case 6:
+                        for (int j = 0 ; j < n ; j++){
+                            for (size_t i = 0; i < mesas.size(); ++i) {
+                                cout << "#" << User[j].numero << setw(28) << "\t-\t" <<User[j].votos << ":"<<endl;
+                                cout << left << setw(8) << mesas[i].numMesa<< setw(28) << mesas[i].distrito  << setw(10) 
+                                << mesas[i].capacidad << mesas[i].votosEmitidos << '\n';
+                            }
+                        }
                         break;
                     case 7:
                         cout << "Regresando al menu principal...\n";
@@ -736,7 +746,6 @@ void LeerCandidato(Candidato &c, string n, char s, int e,string d,string p, stri
 void LeerCorreo(Correo &e, string u, string d){
     e.user = u;
     e.dom = d;
-
 }
 void ImprimeCandidato(Candidato &c){
     cout<<"Nombres:          "<<c.Nombre<<endl;
@@ -786,9 +795,9 @@ void buscarVotantePorDNI(int dniBuscado,Votante votantes[], int nVotantes,const 
             cout << "DNI:        " << votantes[i].dni      << '\n';
             cout << "Nombre:     " << votantes[i].nombre   << '\n';
             cout << "Distrito:   " << votantes[i].distrito << '\n';
-            cout << "Ha votado:  " << (votantes[i].haVotado ? "Sí" : "No") << '\n';
+            cout << "Ha votado:  " << (votantes[i].haVotado ? "Si" : "No") << '\n';
             if (votantes[i].n_mesa == -1) {
-            cout << "\n\033[31mAún no tiene mesa asignada\033[0m" << endl;
+            cout << "\n\033[31mA�n no tiene mesa asignada\033[0m" << endl;
             }
             else {
                 for (size_t j = 0; j < mesas.size(); ++j) {
