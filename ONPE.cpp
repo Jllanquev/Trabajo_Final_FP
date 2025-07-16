@@ -563,7 +563,7 @@ int main(){
                                                 << "  (" << User[c].PartidoPo << ")\n";
                                         }
                                     }
-
+ 
                                     if (numEnCedula == 0) {
                                         cout << "\nNo hay candidatos aptos. Votacion cancelada.\n";
                                         system("pause");
