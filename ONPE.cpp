@@ -95,7 +95,8 @@ string generarNombre();
 string generarApellido();
 
 int main(){
-    int opcion,cand,edad,n=0,max_votantes=1000,max_mesas=100000,cap,r[n],vot_distr=0,totalEmitidos;
+    srand(static_cast<unsigned int>(time(nullptr))); //semilla 
+    int opcion,cand,edad,n=0,max_votantes=1000,max_mesas=100000,cap,r[n],vot_distr=0,totalEmitidos;;
 	string partido,nombre,user,dom,dni,lema,distrito,OPC;
     char sexo;
     bool PadronVotantes = false,procesocerrado=false;
@@ -164,6 +165,8 @@ int main(){
 				else{
 					cout<<"\033[31mInscripcion de candidato descartado. No se guardo\033[0m"<<endl;
 				}
+        system("pause");
+
                 break;
         case 2:
                 system("cls");
@@ -402,6 +405,7 @@ int main(){
                             }
                         cout<<endl;
                         system("pause");
+
                         system("cls");
                         cout<<"***********************************************************"<<endl;
                         cout<<"                     LISTA DE VOTANTES                     "<<endl;
@@ -489,7 +493,7 @@ int main(){
                             cout<< "****************************************************" << endl;
                             cout<< "1. Emitir voto manual (votante)" << endl;
                             cout<< "2. Ver avance de las votaciones "<<endl;
-                            cout<< "3. Votacion automatica (simular 1 000 votos)" << endl;
+                            cout<< "3. Votacion automatica (simular 1000 votos)" << endl;
                             cout<< "4. Culminar proceso de votacion" << endl;
                             cout<< "0. Regresar al menu principal" << endl;
                             cout<< "----------------------------------------------------" << endl;
@@ -520,7 +524,7 @@ int main(){
                                         }
                                     }
                                     if (idx == -1) {
-                                        cout << "DNI no encontrado en el padr�n.\n";
+                                        cout << "DNI no encontrado en el padron.\n";
                                         system("pause");
                                         break;
                                     }
@@ -627,7 +631,6 @@ int main(){
                                         system("pause");
                                         break;
                                     }
-
                                     // Lista de indices de candidatos aptos
                                     vector<int> candidatosAptos;
                                     for (int i = 0; i < n; ++i)
@@ -774,6 +777,7 @@ void LeerCandidato(Candidato &c, string n, char s, int e,string d,string p, stri
 void LeerCorreo(Correo &e, string u, string d){
     e.user = u;
     e.dom = d;
+
 }
 void ImprimeCandidato(Candidato &c){
     cout<<"Nombres:          "<<c.Nombre<<endl;
