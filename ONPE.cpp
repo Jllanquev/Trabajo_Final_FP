@@ -1,52 +1,17 @@
 #include<iostream>  
 #include<string>   //para usar getline
 #include<cstdio>
-#include<random>     //para votar datos aleatorios
-#include <unordered_set>  //para usar random
-#include<cstdlib>    //para usar random
-#include<ctime>     //para usar random
 #include <iomanip>  //para mejorar la anchura de cada tabla
 #include<vector>
+#include "Candidato/candidato.h"
+#include "Candidato/correo.h"
+#include "VOTANTE/constantes.h"
+#include "MESA/mesa.h"
+#include "VOTANTE/generadorAleatorio.h"
+#include "VOTANTE/votante.h"
 
 using namespace std;
 
-enum EstadoCandidato { PENDIENTE, APTO, OBSERVADO };
-
-struct Correo {
-    string user;
-    string dom;
-};
-
-struct Candidato {
-    int numero;               
-    string Nombre;
-    char Sexo;
-    int Edad;
-    string Dni;
-    Correo Email;
-    string PartidoPo;
-    string Lema;
-    string observaciones;        
-    EstadoCandidato estado = PENDIENTE;
-    int votos = 0;             
-};
-
-struct MesaDeVotacion {
-    int numMesa;                 
-    string distrito;               
-    int dniAsig[500];
-    int votosEmitidos = 0;          
-    int capacidad = 500;             
-};
-struct Votante {
-    int dni;
-    string nombre;
-    string distrito;
-    int edad;
-    int n_mesa;         
-    bool haVotado = false;
-    int cand_voto;
-};
 struct ResultadoFinal {
     string nombreCandidato;
     string partido;
@@ -54,45 +19,6 @@ struct ResultadoFinal {
     float porcentaje;
     bool SegundaVuelta = false;
 };
-unordered_set<int> dnisUsados; 
-//Para definir al votante
-const int MAX_VOTANTES = 2000; //nunca cambiara
-Votante votantes[MAX_VOTANTES];
-int nVotantes = 0; //votantes registrados
-
-//Para definir el distrito de cada votante
-const int NUM_DIST = 11;  //nunca cambiara
-string distritos[NUM_DIST] = {
-    "Tacna","Alto de la Alianza","Calana","Ciudad Nueva",
-    "Gregorio Albarracin","Inclan","La Yarada-Los Palos",
-    "Pachia","Palca","Pocollay","Sama"
-};
-const int NUM__NOMBRE = 50;  //nunca cambiara
-string nombre[NUM__NOMBRE] = {
-    "Juan", "Maria", "Luis", "Ana", "Pedro", "Carmen", "Jose", "Lucia", "Carlos", "Rosa",
-    "Miguel", "Elena", "Jorge", "Sofia", "Ricardo", "Laura", "Daniel", "Patricia", "Alejandro", "Teresa",
-    "Diego", "Gabriela", "Manuel", "Valeria", "Kevin", "Tatiana", "Raul", "Camila", "Sebastian", "Monica",
-    "Bruno", "Noelia", "Axel", "Milagros", "Cristian", "Paola", "Renzo", "Estefany", "Bianca", "Oscar",
-    "Fernando", "Ximena", "Gustavo", "Pilar", "Alan", "Antonia", "Nicolas", "Diana", "Santiago", "Isabela"
-};
-const int NUM_APELLIDOS = 50; //nunca cambiara
-string apellido[NUM_APELLIDOS] = {
-     "Perez", "Lopez", "Garcia", "Torres", "Diaz", "Rojas", "Vargas", "Fernandez", "Aguilar", "Salas",
-    "Mendoza", "Castillo", "Herrera", "Flores", "Ramos", "Ruiz", "Soto", "Chavez", "Romero", "Navarro",
-    "Llanque", "Bravo", "Salazar", "Vega", "Medina", "Palomino", "Paredes", "Silva", "Palacios", "Cabrera",
-    "Rivera", "Calderon", "Mora", "Puma", "Delgado", "Acosta", "Lozano", "Valdivia", "Huaman", "Ortiz",
-    "Limachi", "Espinoza", "Meza", "Cornejo", "Velasquez", "Vilca", "Aliaga", "Zevallos", "Huanca", "Quispe"
-};
-
-void LeerCorreo(Correo &, string, string);  //Leera el correo
-void LeerCandidato(Candidato &,string,char,int,string,string,string,Correo);  //Leera los datos del candidato
-void ImprimeCandidato(Candidato &);
-void crearVotante(Votante &);
-int generarDNI();
-void buscarVotantePorDNI(int,Votante[], int,const vector<MesaDeVotacion>&);
-string generarDistrito();
-string generarNombre();
-string generarApellido();
 
 int main(){
     srand(static_cast<unsigned int>(time(nullptr))); //semilla 
@@ -100,10 +26,10 @@ int main(){
 	string partido,nombre,user,dom,dni,lema,distrito,OPC;
     char sexo;
     bool PadronVotantes = false,procesocerrado=false;
-	Candidato User[200], InfoCand;
+	Candidato User[200], InfoCand; 
 	Correo email;
+    Votante votantes[10000];
     vector<MesaDeVotacion> mesas;
-    srand(static_cast<unsigned int>(time(nullptr)));
     do{
     system("cls");
     cout<<"*****************************************************"<<endl;
@@ -764,87 +690,3 @@ int main(){
     }while(opcion!=0);
     return 0;
 }
-void LeerCandidato(Candidato &c, string n, char s, int e,string d,string p, string l,  Correo em){
-    c.Nombre = n;
-    c.Sexo  = s;
-    c.Edad = e;
-    c.Dni= d;
-    c.PartidoPo = p;
-    c.Lema = l;
-    c.Email = em;
-}
-
-void LeerCorreo(Correo &e, string u, string d){
-    e.user = u;
-    e.dom = d;
-
-}
-void ImprimeCandidato(Candidato &c){
-    cout<<"Nombres:          "<<c.Nombre<<endl;
-    cout<<"DNI:              "<<c.Dni<<endl;  
-    cout<<"Sexo:             "<<c.Sexo<<endl;
-    cout<<"Edad:             "<<c.Edad<<endl;
-    cout<<"Email:            "<<c.Email.user<<"@"<<c.Email.dom<<endl;
-    cout<<"Partido Politico: "<<c.PartidoPo<<endl;
-    cout<<"Lema:             "<<c.Lema<<endl;
-}
-void crearVotante(Votante &v) {
-    v.dni       = generarDNI();
-    v.distrito  = generarDistrito();
-    v.nombre    = generarNombre() + " " + generarApellido() + " " + generarApellido();
-    v.n_mesa    = -1;
-    v.haVotado  = false;
-}
-
-int generarDNI(){
-     static mt19937 rng( random_device{}() );
-     uniform_int_distribution<int> dist(40'000'000, 70'000'000);
-     int d;
-    do {
-        d = dist(rng);                       // Genera un numero en el rango
-    } while ( dnisUsados.count(d) );         // Repite si ya fue usado
-    dnisUsados.insert(d);                    // Marca el DNI como usado
-    return d;                                // Devuelve el DNI Unico
-}
-string generarDistrito(){
-    int idx = rand() % NUM_DIST;
-    return distritos[idx];
-}
-string generarNombre(){
-    int idxNombre = rand() % NUM__NOMBRE;
-    return nombre[idxNombre];
-}
-string generarApellido(){
-    int idxApellido = rand() % NUM_APELLIDOS;
-    return apellido[idxApellido];
-}
-void buscarVotantePorDNI(int dniBuscado,Votante votantes[], int nVotantes,const vector<MesaDeVotacion>& mesas){
-    bool encontrado = false; 
-    for(int i=0;i<nVotantes;i++){
-        if(votantes[i].dni==dniBuscado){
-            encontrado = true;
-            cout << "\n\033[36mVOTANTE ENCONTRADO\033[0m\n";
-            cout << "DNI:        " << votantes[i].dni      << '\n';
-            cout << "Nombre:     " << votantes[i].nombre   << '\n';
-            cout << "Distrito:   " << votantes[i].distrito << '\n';
-            cout << "Ha votado:  " << (votantes[i].haVotado ? "Si" : "No") << '\n';
-            if (votantes[i].n_mesa == -1) {
-            cout << "\n\033[31mAun no tiene mesa asignada\033[0m" << endl;
-            }
-            else {
-                for (size_t j = 0; j < mesas.size(); ++j) {
-                    if (mesas[j].numMesa == votantes[i].n_mesa) {
-                        cout << "\n\033[36mMESA DE VOTACION\033[0m\n";
-                        cout << "N Mesa:   " << mesas[j].numMesa       << endl;
-                        cout << "Distrito:  " << mesas[j].distrito      << endl;
-                        break;  
-                    }
-                }
-            }
-            break;  
-        }
-    }
-    if(!encontrado)
-        cout<<"\n\t\033[31mVOTANTE NO ENCONTRADO\033[0m\n";
-    return;
-};
